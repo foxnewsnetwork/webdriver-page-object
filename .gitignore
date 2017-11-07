@@ -1,0 +1,40 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# grunt-gh-pages creates a temporary clone of the repo
+/.grunt
+
+# compiled output
+/dist
+/tmp
+/errorShots
+/vendor/ps4-core
+/vendor/@sie
+public/assets/pre-run.js
+
+# localized strings
+**/i18n/*.json
+
+# dependencies
+/node_modules
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage/*
+/libpeerconnection.log
+npm-debug.log
+npm-debug.log*
+testem.log
+yarn-error.log
+.idea
+.DS_Store
+.vagrant
+
+# skynet tests
+/test_result_temp
+/test_failure_screenshots
+/errorShots
+/failure_applitoolsShots
+.cache/
+logs/
+skynet.user.conf
