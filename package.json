@@ -4,7 +4,7 @@
   "description": "es7 syntax webdriver.io page-object framework for constructuring sensible APIs for acceptance / integration testing",
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --no-cache"
   },
   "repository": {
     "type": "git",
@@ -28,7 +28,6 @@
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
-    "chai": "^4.1.2",
     "jest": "^21.2.1",
     "prettier": "^1.8.1",
     "transducers-js": "^0.4.174",
