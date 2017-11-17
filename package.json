@@ -4,7 +4,7 @@
   "description": "es7 syntax webdriver.io page-object framework for constructuring sensible APIs for acceptance / integration testing",
   "main": "dist/index.js",
   "scripts": {
-    "test": "jest --no-cache"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -23,7 +23,11 @@
   },
   "homepage": "https://github.com/foxnewsnetwork/webdriver-page-object#readme",
   "devDependencies": {
+    "@types/jest": "^21.1.6",
+    "@types/transducers-js": "^0.4.4",
+    "@types/webdriverio": "^4.8.6",
     "babel-cli": "^6.26.0",
+    "babel-jest": "^21.2.0",
     "babel-plugin-transform-async-generator-functions": "^6.24.1",
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-polyfill": "^6.26.0",
@@ -31,6 +35,38 @@
     "jest": "^21.2.1",
     "prettier": "^1.8.1",
     "transducers-js": "^0.4.174",
+    "ts-jest": "^21.2.2",
+    "typescript": "^2.6.1",
     "webdriverio": "^4.8.0"
+  },
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "useBabelrc": true,
+        "tsConfigFile": "tsconfig.json"
+      }
+    },
+    "verbose": true,
+    "moduleDirectories": [
+      "node_modules",
+      "<rootDir>/src",
+      "<rootDir>/test"
+    ],
+    "setupFiles": [
+      "<rootDir>/test/helpers/babel-polyfill.js"
+    ],
+    "transform": {
+      "^.+\\.js$": "<rootDir>/node_modules/babel-jest",
+      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testMatch": [
+      "**/test/**/*.test.(ts|js)"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "json"
+    ]
   }
 }

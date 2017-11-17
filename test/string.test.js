@@ -10,6 +10,9 @@ describe('Unit | Helpers | string', () => {
       const expected = 'dogs bark';
       expect(actual).toEqual(expected);
     });
+    test('should handle nulls gracefully', () => {
+      expect(append('dogs', null)).toEqual('dogs');
+    });
   });
   describe('indexOf', () => {
     test('should give the correct index', () => {

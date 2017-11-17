@@ -1,15 +1,13 @@
-import t from 'transducers-js';
-import { invokeWithDefault, invoke, isPresent } from './utils';
-
-const {
+import {
   filter,
   into,
   comp,
   map,
   transduce
-} = t;
+} from 'transducers-js';
+import { invokeWithDefault, invoke, isPresent } from './utils';
 
-const _appendRe = (sentence, word) => [sentence, word].filter(isPresent).join(' ');
+const _appendRe = (sentence: string, word: string) => [sentence, word].filter(isPresent).join(' ');
 const _appendXf = comp(filter(isPresent), map(invoke('trim')));
 /**
  * Joins `isPresent` words together with strings
@@ -24,7 +22,7 @@ const _appendXf = comp(filter(isPresent), map(invoke('trim')));
  *
  * @param {Array<string>} words
  */
-export const append = (...words) => transduce(_appendXf, _appendRe, '', words);
+export const append = (...words: Array<string>) => transduce(_appendXf, _appendRe, '', words);
 
 /**
  * Exactly the same as String#indexOf
@@ -33,7 +31,7 @@ export const append = (...words) => transduce(_appendXf, _appendRe, '', words);
  * @param {*} words
  * @param {*} word
  */
-export const indexOf = (words, word) =>
+export const indexOf = (words: string, word: string) =>
   invokeWithDefault(() => -1, 'indexOf', word)(words);
 
-export const contains = (words, word) => indexOf(words, word) >= 0;
+export const contains = (words: string, word: string) => indexOf(words, word) >= 0;

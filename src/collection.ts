@@ -2,14 +2,29 @@ import component from './component';
 import absoluteSelector from './absolute-selector';
 import force from './force';
 import { append } from './string';
+import { DriverAPI, Widget } from './page-object';
+import { Client } from 'webdriverio';
 
 class Collection {
-  constructor(browser, ds, itemScope, parentWidget, ChildWidgetClass) {
-    this.browser = browser;
-    this.ds = ds;
+  driverAPI: DriverAPI;
+  itemScope: string;
+  parentWidget: Widget;
+  ChildWidgetClass: typeof Widget;
+
+  constructor(
+    driverAPI: DriverAPI,
+    itemScope: string,
+    parentWidget: Widget,
+    ChildWidgetClass: typeof Widget
+  ) {
+    this.driverAPI = driverAPI;
     this.itemScope = itemScope;
     this.parentWidget = parentWidget;
     this.ChildWidgetClass = ChildWidgetClass;
+  }
+
+  get browser(): Client<any> {
+    return this.driverAPI.browser;
   }
   /**
    * The async iterator allows us to use the `for await`
@@ -18,7 +33,7 @@ class Collection {
    * https://github.com/tc39/proposal-async-iteration
    */
   async *[Symbol.asyncIterator]() {
-    for (let childNo = 0; i < Infinity; i++) {
+    for (let childNo = 0; childNo < Infinity; childNo++) {
       const child = this.at(childNo);
       const { isExisting } = await force(child);
       if (isExisting) {
@@ -52,7 +67,10 @@ class Collection {
   }
 }
 
-export default function collection(parentWidget, itemScope, ChildWidgetClass) {
-  const { browser, ds } = parentWidget;
-  return new Collection(browser, ds, itemScope, parentWidget, ChildWidgetClass);
+export default function collection(
+  parentWidget: Widget,
+  itemScope: string,
+  ChildWidgetClass: typeof Widget
+): Collection {
+  return new Collection(parentWidget.driverAPI, itemScope, parentWidget, ChildWidgetClass);
 }

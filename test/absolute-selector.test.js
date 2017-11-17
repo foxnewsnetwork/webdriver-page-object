@@ -33,9 +33,12 @@ describe('Unit | Helpers | absoluteSelector', () => {
   let page;
 
   beforeEach(() => {
-    page = new Page({}, {});
+    page = new Page({});
   });
 
+  test('should have the expected scope', () => {
+    expect(page.scope).toEqual('.grand-parent');
+  });
   describe('@page', () => {
     test('should be correct', () => {
       expect(absoluteSelector(page)).toEqual('.grand-parent');

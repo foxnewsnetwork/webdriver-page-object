@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "dist",
+    "baseUrl": ".",
+    "lib": [
+      "dom",
+      "es2015",
+      "es2017",
+      "esnext",
+      "esnext.asynciterable"
+    ],
+    "paths": {
+      "*": [
+        "node_modules/*",
+        "src/types/*"
+      ]
+    },
+    "typeRoots": [
+      "./node_modules/@types"
+    ],
+    "types": [
+      "jest",
+      "transducers-js"
+    ]
+  },
+  "include": [
+    "src/**/*"
+  ]
+}

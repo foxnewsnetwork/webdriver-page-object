@@ -39,7 +39,7 @@ describe('Unit | Helpers | collection', () => {
   let page;
 
   beforeEach(() => {
-    page = new Page({}, {});
+    page = new Page({});
   });
 
   test('should be ok', () => {
