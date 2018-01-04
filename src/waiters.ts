@@ -36,7 +36,7 @@ export async function waitUntil(
   throw new TimeoutError(`Failed to achieve desired state after ${totalTime}`);
 }
 
-export function waitMS<T>(n: number, v?: T): Promise<T | void> {
+export function waitMS<T>(n: number, v?: T): Promise<T> {
   return new Promise(resolve => {
     setTimeout(() => resolve(v), n);
   });
