@@ -3,7 +3,7 @@ import { Widget } from '../src/page-object';
 import component from '../src/component';
 
 class Page extends Widget {
-  static get scope() {
+  get scope() {
     return '.grand-parent';
   }
 
@@ -11,7 +11,7 @@ class Page extends Widget {
     return component(
       this,
       class extends Widget {
-        static get scope() {
+        get scope() {
           return '.my-widget';
         }
 
@@ -19,7 +19,7 @@ class Page extends Widget {
           return component(
             this,
             class extends Widget {
-              static get scope() {
+              get scope() {
                 return '.child-widget';
               }
             }

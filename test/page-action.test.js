@@ -1,117 +1,125 @@
-import { Widget } from '../src/page-object';
-import component from '../src/component';
-import absoluteSelector from '../src/absolute-selector';
-import { waitMS } from '../src/waiters';
+import App from './fixtures/app';
+import { FakeDriver } from './fixtures/driver-api';
 
-class Router {
-  constructor() {
-    this.routeName = 'home';
-  }
+describe('Unit | PageAction', () => {
+  let driver;
+  beforeEach(() => {
+    driver = new FakeDriver();
+  });
 
-  async go(routeName) {
-    await waitMS(5)
-    return this.routeName = routeName;
-  }
-}
-
-class App extends Widget {
-  get actions() {
-    const goHome = ::this.goHome;
-    const goProduct = ::this.goProduct;
-    return { goHome, goProduct };
-  }
-
-  get homePage() {
-    const { goProduct } = this.actions;
-    return component(this, class extends HomePage {
-      get actions() {
-        return { clickBanner: goProduct };
-      }
+  describe('app', () => {
+    let app;
+    beforeEach(() => {
+      app = new App(driver);
     });
-  }
-
-  get productPage() {
-    const { goHome } = this.actions;
-    return component(this, class extends ProductPage {
-      get actions() {
-        return { clickBack: goHome };
-      }
+    describe('.homePage', () => {
+      let home;
+      beforeEach(() => {
+        home = app.homePage;
+      });
+      test('should have the home page widget', () => {
+        expect(home).toBeDefined();
+      });
+      test('should have the correct scope', () => {
+        expect(home.scope).toEqual('.home-page');
+      });
+      test('should be active', () => {
+        expect(home.isActive).toEqual(true);
+      });
+      describe('.actions', () => {
+        let actions;
+        beforeEach(() => {
+          actions = home.actions;
+        });
+        describe('keys', () => {
+          let keys;
+          beforeEach(() => {
+            keys = Object.keys(actions);
+          });
+          test('should have singular length', () => {
+            expect(keys).toHaveLength(1);
+          });
+          test('should contain the clickBanner', () => {
+            expect(actions.clickBanner).toBeInstanceOf(Function);
+          });
+        });
+      });
+      describe('.availableActions() async', () => {
+        let actions;
+        beforeEach(async () => {
+          actions = await home.availableActions();
+        });
+        describe('keys', () => {
+          let keys;
+          beforeEach(() => {
+            keys = Object.keys(actions);
+          });
+          test('should have singular length', () => {
+            expect(keys).toHaveLength(1);
+          });
+          test('should contain the clickBanner', () => {
+            expect(actions.clickBanner).toBeInstanceOf(Function);
+          });
+        });
+        describe('.goProduct', () => {
+          let product;
+          beforeEach(async () => {
+            product = await actions.clickBanner();
+          });
+          test('should be the resultant page', () => {
+            expect(product).toEqual(app.productPage);
+          });
+          test('home should not be active', () => {
+            expect(home.isActive).toBeFalsy();
+          });
+          test('product should be active', () => {
+            expect(product.isActive).toBeTruthy();
+          });
+          describe('.availableActions() async', () => {
+            let productActions;
+            beforeEach(async () => {
+              productActions = await product.availableActions();
+            });
+            test('should have the clickBack', () => {
+              expect(productActions.clickBack).toBeInstanceOf(Function);
+            });
+            describe('.clickBack', () => {
+              let againHomePage;
+              beforeEach(async () => {
+                againHomePage = await productActions.clickBack();
+              });
+              test('should be the home page again', () => {
+                expect(againHomePage).toEqual(home);
+              });
+            });
+          });
+        });
+      });
     });
-  }
+    describe('.actions', () => {
+      let actions;
+      beforeEach(() => {
+        actions = app.actions;
+      });
+      test('should be an object', () => {
+        expect(actions).toBeDefined();
+      });
 
-  private async goHome() {
-    await this.driverAPI.app.go('home');
-    return this.homePage;
-  }
-
-  private async goProduct() {
-    await this.driverAPI.app.go('product');
-    return this.productPage;
-  }
-}
-
-class Banner extends Widget {
-  async click(exit) {
-    return exit();
-  }
-
-  async availableActions() {
-    const { onClick } = this.constructor.actions;
-
-    return {
-      clickBanner: () => this.click(onClick)
-    };
-  }
-}
-
-class Detail extends Widget {
-  async clickBack(exit) {
-    return exit();
-  }
-
-  async availableActions() {
-    const { onClick } = this.actions;
-
-    return {
-      clickBack: () => this.clickBack(onClick)
-    };
-  }
-}
-class ProductPage extends Widget {
-  static get scope() {
-    return '.product-page';
-  }
-
-  get isActive() {
-    return this.driverAPI.router.routeName === 'product';
-  }
-
-  get detail() {
-    const { clickBack } = this.actions;
-
-    return component(this, class extends Detail {
-      get actions() {
-        return { onClick: clickBack };
-      }
+      describe('keys', () => {
+        let keys;
+        const ACTION_NAMES = ['goHome', 'goProduct'];
+        beforeEach(() => {
+          keys = Object.keys(actions);
+        });
+        test('should have length 2', () => {
+          expect(keys).toHaveLength(2);
+        });
+        for (const actionName of ACTION_NAMES) {
+          test(`has ${actionName}`, () => {
+            expect(actions[actionName]).toBeInstanceOf(Function);
+          });
+        }
+      });
     });
-  }
-}
-class HomePage extends Widget {
-  static get scope() {
-    return '.home-page';
-  }
-
-  get isActive() {
-    return this.driverAPI.router.routeName === 'home';
-  }
-
-  get banner() {
-    const { clickBanner } = this.actions;
-
-    return component(this, class extends Banner {
-      get actions() {
-        return { onClick: clickBanner }
-      }
-    });
-  }
-}
+  });
+});

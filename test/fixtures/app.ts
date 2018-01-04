@@ -1,41 +1,33 @@
 import { Widget } from '../../src/page-object';
 import component from '../../src/component';
-import absoluteSelector from '../../src/absolute-selector';
-import { waitMS } from '../../src/waiters';
 import { ActionsHash } from '../../src/page-action';
-
-class Router {
-  routeName: string;
-
-  constructor() {
-    this.routeName = 'home';
-  }
-
-  async go(routeName) {
-    await waitMS(5)
-    return this.routeName = routeName;
-  }
-}
+import { FakeDriver } from './driver-api';
 
 function captureActions(ctx: Widget): ActionsHash {
+  const keys = Object.keys(ctx.actions);
   let captured = {};
-  for(let key in Object.keys(ctx.actions)) {
+  for(let i = 0; i < keys.length; i++) {
+    const key = keys[i];
     const action = ctx.actions[key];
     captured[key] = action.bind(ctx);
   }
   return captured;
 }
 
-class App extends Widget {
+class FakeWidget extends Widget {
+  driverAPI: FakeDriver;
+}
+
+export default class App extends FakeWidget {
   get actions() {
     return {
       async goHome() {
-        await this.driverAPI.browser.url('home');
+        await this.driverAPI.router.go('home');
         return this.homePage;
       },
 
       async goProduct() {
-        await this.driverAPI.browser.url('product');
+        await this.driverAPI.router.go('product');
         return this.productPage;
       }
     }
@@ -43,7 +35,7 @@ class App extends Widget {
 
   get homePage() {
     const { goProduct } = captureActions(this);
-    return component(this, class extends HomePage {
+    return component(this, class ActionableHomePage extends HomePage {
       get actions() {
         return { clickBanner: goProduct };
       }
@@ -52,7 +44,7 @@ class App extends Widget {
 
   get productPage() {
     const { goHome } = captureActions(this);
-    return component(this, class extends ProductPage {
+    return component(this, class ActionableProductPage extends ProductPage {
       get actions() {
         return { clickBack: goHome };
       }
@@ -60,7 +52,7 @@ class App extends Widget {
   }
 }
 
-class Banner extends Widget {
+class Banner extends FakeWidget {
   async click(exit) {
     return exit();
   }
@@ -74,7 +66,7 @@ class Banner extends Widget {
   }
 }
 
-class Detail extends Widget {
+class Detail extends FakeWidget {
   async clickBack(exit) {
     return exit();
   }
@@ -87,8 +79,8 @@ class Detail extends Widget {
     };
   }
 }
-class ProductPage extends Widget {
-  static get scope() {
+class ProductPage extends FakeWidget {
+  get scope() {
     return '.product-page';
   }
 
@@ -99,15 +91,15 @@ class ProductPage extends Widget {
   get detail() {
     const { clickBack } = captureActions(this);
 
-    return component(this, class extends Detail {
+    return component(this, class ActionableDetail extends Detail {
       get actions() {
         return { onClick: clickBack };
       }
     });
   }
 }
-class HomePage extends Widget {
-  static get scope() {
+class HomePage extends FakeWidget {
+  get scope() {
     return '.home-page';
   }
 
@@ -118,7 +110,7 @@ class HomePage extends Widget {
   get banner() {
     const { clickBanner } = captureActions(this);
 
-    return component(this, class extends Banner {
+    return component(this, class ActionableBanner extends Banner {
       get actions() {
         return { onClick: clickBanner }
       }
