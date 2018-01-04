@@ -1,16 +1,19 @@
 import { Client } from 'webdriverio';
+import { ActionsHash, PageAction } from './page-action';
 
 export interface DriverAPI {
   browser: Client<any>;
 }
 
-export class Widget {
-  static get scope(): string {
-    return '';
-  }
+export interface WidgetAPI {
+  scope: string;
+  actions: ActionsHash;
+  availableActions(): Promise<ActionsHash>;
+}
 
-  driverAPI: DriverAPI
-  parentScope: string
+export class Widget implements WidgetAPI {
+  driverAPI: DriverAPI;
+  parentScope: string;
 
   constructor(driverAPI: DriverAPI, parentScope: string = '') {
     this.driverAPI = driverAPI;
@@ -18,10 +21,18 @@ export class Widget {
   }
 
   get scope(): string {
-    return this.constructor.scope;
+    return '';
+  }
+
+  get actions(): ActionsHash {
+    return {};
   }
 
   get browser(): Client<any> {
     return this.driverAPI.browser;
+  }
+
+  async availableActions(): Promise<ActionsHash> {
+    return this.actions;
   }
 }

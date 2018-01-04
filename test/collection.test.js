@@ -4,7 +4,7 @@ import component from '../src/component';
 import absoluteSelector from '../src/absolute-selector';
 
 class Page extends Widget {
-  static get scope() {
+  get scope() {
     return '.home-page';
   }
 
@@ -22,7 +22,7 @@ class Page extends Widget {
                 return component(
                   this,
                   class extends Widget {
-                    static get scope() {
+                    get scope() {
                       return '.tile';
                     }
                   }
