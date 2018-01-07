@@ -17,6 +17,15 @@ Checkout the examples directory in this repo for more detailed usage.
 
 For now, consider the following general guide of trying to build an app-object around github
 
+
+# Q&A
+
+Q: What's the difference between a service like [webdriver.io](http://webdriver.io/) and something like [testem.js](https://github.com/testem/testem)
+A: testem is a testing harness for running javascript code in different browser environments. Meanwhile, webdriver.io is an API platform for automating a browser via node.js (or python). What a test harness like testem does is load up a browser via some API (internally, this *may* be via webdriver.io, but the exact implementation is encapsulated from us), serve our desired test suite into the browser, then running that test in the browser environment. Meanwhile, webdriver loads up a browser which, as a part of our test suite, we can control. Furthermore, our tests in webdriver are all run in the node environment
+
+Q: which is better?
+A: testing via webdriver is more "black-box" but also affords more user-like control over the actions. Testing via testem (or similar) harness gives a lot more control by affording more access to the JS objects in the browser JS environment that the tests can interact with, but doesn't afford the same level of user-simulation. Typically, developers should write testem.js tests to do their really coarse-grain testing before they get their features accepted, while QA and SDETs should write webdriver tests to ensure the app is sensible at the user level. A truly quality app would have both (lol good luck with that)
+
 # Inspiration and References
 
 - [Fowler's original article](https://martinfowler.com/bliki/PageObject.html)
