@@ -49,3 +49,20 @@ export const any = (...booleans: Array<boolean>) => booleans.reduce(or, false);
 export function id<T>(x: T): T {
   return x;
 }
+
+interface MapFn<A,B> {
+  (a: A, key: string): B
+}
+
+export function mapVal<T, S>(hash: Hash<T>, fn: MapFn<T,S>): Hash<S> {
+  const keys = Object.keys(hash);
+  const output: Hash<S> = {};
+
+  for(let i = 0; i < keys.length; i++) {
+    const key = keys[i];
+    const val = hash[key];
+    output[key] = fn(val, key);
+  }
+
+  return output;
+}

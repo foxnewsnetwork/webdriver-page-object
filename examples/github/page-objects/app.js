@@ -1,27 +1,69 @@
 'use strict';
 
-const { Widget } = require('../../../dist/index');
+const { Widget, text, click, isExisting, isVisible, click } = require('../../../dist/index');
 
 class App extends Widget {
   get widgets() {
     return {
-      pagehead: this.component(PageHead),
-      filewrap: this.component(FileWrap)
+      pagehead: this.widget(PageHead),
+      codePage: this.widget(CodePage),
+      issuesPage: this.widget(IssuesPage)
     };
   }
 }
 
 class PageHead extends Widget {
-  get properties() {
+  get scope() {
+    return '.pagehead.repohead';
+  }
+  get widgets() {
     return {
-      isVisible: this.property(isVisible, '.repohead.pagehead')
+      codeButton: this.navbuttons.at(0),
+      issuesButton: this.navbuttons.at(1),
+      prButton: this.navbuttons.at(2)
     };
   }
-  async availableActions() {
+  get properties() {
+    return {
+      isVisible: isVisible(this)
+    };
+  }
 
+  get navbuttons() {
+    return this.collection('nav.reponav', PageHeadButton);
   }
 }
 
-class FileWrap extends Widget {
+class PageHeadButton extends Widget {
+  get scope() {
+    return '.reponav-item';
+  }
 
+  get properties() {
+    return {
+      label: text(this, '[itemprop=name]'),
+      isVisible: isVisible(this)
+    };
+  }
+
+  get actions() {
+    return {
+      click: click(this)
+    };
+  }
+}
+
+class CodePage extends Widget {
+  get properties() {
+    return {
+      isLoaded: isExisting(this, '.file-wrap')
+    };
+  }
+}
+class IssuesPage extends Widget {
+  get properties() {
+    return {
+      isLoaded: isExisting(this, '.issues-listing')
+    };
+  }
 }

@@ -6,3 +6,6 @@ export { default as force } from './force';
 export { default as hasClass } from './has-class';
 export { Widget } from './page-object';
 export { default as text } from './text';
+export { default as isVisible } from './is-visible';
+export { default as isExisting } from './is-existing';
+export { default as click } from './click';

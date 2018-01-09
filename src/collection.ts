@@ -5,7 +5,7 @@ import { append } from './string';
 import { DriverAPI, Widget } from './page-object';
 import { Client } from 'webdriverio';
 
-class Collection {
+export class Collection {
   driverAPI: DriverAPI;
   itemScope: string;
   parentWidget: Widget;
@@ -47,7 +47,7 @@ class Collection {
     const { parentWidget, ChildWidgetClass, itemScope } = this;
     return component(
       parentWidget,
-      class extends ChildWidgetClass {
+      class ScopeChildWidgetClass extends ChildWidgetClass {
         get scope() {
           return append(super.scope, `${itemScope}:nth-child(${n + 1})`);
         }
