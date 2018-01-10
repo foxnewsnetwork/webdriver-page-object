@@ -1,11 +1,12 @@
-'use strict';
+import { Widget, text, click, isExisting, isVisible, click } from 'webdriver-page-object';
 
-const { Widget, text, click, isExisting, isVisible, click } = require('../../../dist/index');
-
-class App extends Widget {
+export default class App extends Widget {
   get widgets() {
     return {
-      pagehead: this.widget(PageHead),
+      pagehead: this.widget(PageHead, {
+        goCode: 3,
+        goIssues: 4
+      }),
       codePage: this.widget(CodePage),
       issuesPage: this.widget(IssuesPage)
     };

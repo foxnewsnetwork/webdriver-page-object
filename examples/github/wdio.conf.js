@@ -1,4 +1,4 @@
-exports.config = {
+export default {
   specs: ['./specs/*.js'],
   exclude: [],
   maxInstances: 1, // it depends on the plan of the cloud servvice
