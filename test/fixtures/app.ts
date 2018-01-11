@@ -1,6 +1,5 @@
-import { Widget } from '../../src/page-object';
+import { Widget, ActionsHash } from '../../src/page-object';
 import component from '../../src/component';
-import { ActionsHash } from '../../src/page-action';
 import { FakeDriver } from './driver-api';
 
 function captureActions(ctx: Widget): ActionsHash {
